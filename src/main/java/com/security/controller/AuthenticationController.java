@@ -1,5 +1,6 @@
 package com.security.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,8 +25,8 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "*") // Permite requisições de qualquer origem
 @Tag(name = "Autenticação", description = "Endpoints para autenticação e registro de usuários")
 public class AuthenticationController {
-
-    private final AuthenticationService authenticationService;
+    @Autowired
+    AuthenticationService authenticationService;
 
     @PostMapping("/register")
     @Operation(
@@ -43,10 +44,10 @@ public class AuthenticationController {
         summary = "Autenticar usuário",
         description = "Autentica o usuário com email e senha e retorna um token JWT válido"
     )
-    public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
-    ) {
-    	 System.out.println("Authentication attempt for email: " + request.getEmail());
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+        //System.out.println("Tentando autenticar o usuário: " + request.getEmail());
+        AuthenticationResponse response = authenticationService.authenticate(request);
+        //System.out.println("Token gerado: " + response.getAccessToken());
+        return ResponseEntity.ok(response);
     }
 }

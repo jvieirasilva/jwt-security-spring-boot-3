@@ -1,5 +1,7 @@
 package com.security.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +32,8 @@ public class AuthenticationService {
     
     @Autowired
     private EmailService emailService;
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
@@ -43,8 +47,8 @@ public class AuthenticationService {
         //send mail 
         emailService.sendEmail(request.getEmail(), request.getPassword());
         
-        var jwtToken = "Bearer "+jwtService.generateToken(user);
-        var refreshToken = "Bearer "+jwtService.generateRefreshToken(user);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
         
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
@@ -53,22 +57,28 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
+        try {
+            authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
+                    request.getEmail(),
+                    request.getPassword()
                 )
-        );
-        
-        var user = repository.findByEmail(request.getEmail())
-                .orElseThrow();
-        
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        
-        return AuthenticationResponse.builder()
-                .accessToken("Bearer "+jwtToken)
-                .refreshToken("Bearer "+refreshToken)
-                .build();
+            );
+
+            var user = repository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+            var jwtToken = jwtService.generateToken(user);
+            var refreshToken = jwtService.generateRefreshToken(user);
+
+            return AuthenticationResponse.builder()
+                    .accessToken(jwtToken)
+                    .refreshToken(refreshToken)
+                    .build();
+        } catch (Exception e) {
+            System.err.println("Erro na autenticação: " + e.getMessage());
+            throw new RuntimeException("Falha na autenticação", e);
+        }
     }
+
 }
