@@ -65,7 +65,7 @@ public class StationService {
 	
 			UserDTO userDTO = new UserDTO();
 			userDTO.setId(station.getUser().getId());
-			userDTO.setCompleteName(station.getUser().getFullName());
+			userDTO.setFullName(station.getUser().getFullName());
 			userDTO.setEmail(station.getUser().getEmail());
 			dto.setUserDto(userDTO);
 			dto.setSimCardState(station.getSimCardState());

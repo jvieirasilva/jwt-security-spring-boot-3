@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "station", schema = "iskraemeco")  // 🔥 Adiciona o schema corretamente
+@Table(name = "station", schema = "training")  // 🔥 Adiciona o schema corretamente
 @Data
 public class Station {
     @Id
@@ -30,7 +30,7 @@ public class Station {
     @JoinColumn(name = "state_id", nullable = true)
     private State state;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "estation_model_id", nullable = true)
     private EstationModel estationModel;
 

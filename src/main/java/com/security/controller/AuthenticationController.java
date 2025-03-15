@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.security.dto.AuthenticationRequest;
-import com.security.dto.AuthenticationResponse;
 import com.security.dto.RegisterRequest;
+import com.security.dto.UserDTO;
+import com.security.response.AuthenticationResponse;
 import com.security.service.AuthenticationService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,21 +34,27 @@ public class AuthenticationController {
         summary = "Registrar novo usuário",
         description = "Cria um novo usuário no sistema e retorna um token JWT válido"
     )
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request
-    ) {
-        return ResponseEntity.ok(authenticationService.register(request));
+    public ResponseEntity<UserDTO> register(@RequestBody RegisterRequest request) {
+        AuthenticationResponse response = authenticationService.register(request);
+
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + response.getAccessToken())
+                .header("Refresh-Token", response.getRefreshToken())
+                .body(response.getUser());
     }
+
 
     @PostMapping("/authenticate")
     @Operation(
         summary = "Autenticar usuário",
         description = "Autentica o usuário com email e senha e retorna um token JWT válido"
     )
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
-        //System.out.println("Tentando autenticar o usuário: " + request.getEmail());
+    public ResponseEntity<UserDTO> authenticate(@RequestBody AuthenticationRequest request) {
         AuthenticationResponse response = authenticationService.authenticate(request);
-        //System.out.println("Token gerado: " + response.getAccessToken());
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + response.getAccessToken())
+                .header("Refresh-Token", response.getRefreshToken())
+                .body(response.getUser());
     }
 }

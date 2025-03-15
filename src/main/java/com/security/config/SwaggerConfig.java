@@ -17,7 +17,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         Server localServer = new io.swagger.v3.oas.models.servers.Server();
-        localServer.setUrl("http://localhost:8082");
+        localServer.setUrl("http://localhost:8085");
         localServer.setDescription("Servidor Local");
         
         return new OpenAPI()

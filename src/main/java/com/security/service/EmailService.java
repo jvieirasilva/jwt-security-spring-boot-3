@@ -48,7 +48,7 @@ public class EmailService {
 	                + "<p>You have been registered. Here are your login details:</p>"
 	                + "<p><strong>Login:</strong> " + toEmail + "</p>"
 	                + "<p><strong>Password:</strong> " + newPassword + "</p>"
-	                + "<p><strong>URL:</strong> <a href='http://localhost:8082'>http://localhost:4200</a></p>"
+	                + "<p><strong>URL:</strong> <a href='http://localhost:8085'>http://localhost:4200</a></p>"
 	                + "<p>Please keep this information secure.</p>"
 	                + "</body>"
 	                + "</html>";
