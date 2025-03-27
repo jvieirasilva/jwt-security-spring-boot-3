@@ -39,7 +39,7 @@ public class AuthenticationController {
 
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + response.getAccessToken())
-                .header("Refresh-Token2", response.getRefreshToken())
+                .header("Refresh-Token", response.getRefreshToken())
                 .body(response.getUser());
     }
 
@@ -54,7 +54,7 @@ public class AuthenticationController {
 
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + response.getAccessToken())
-                .header("Refresh-Token", response.getRefreshToken())
+                .header("Refresh-Token Updated", response.getRefreshToken())
                 .body(response.getUser());
     }
 }
