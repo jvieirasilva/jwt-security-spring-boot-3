@@ -1,4 +1,4 @@
-package com.security.dto;
+package com.security.reqeuest;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

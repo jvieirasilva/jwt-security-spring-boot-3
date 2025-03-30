@@ -28,9 +28,9 @@ public class UserDTO {
 	    private Date lastLoginDateDisplay;
 	    private Date joinDate;
 	    private String role;
-	    private boolean isActive;
-	    private boolean isNotLocked;
-	    private boolean isChangePassword;
+	    private boolean isActive = true;
+	    private boolean isNotLocked = true;
+	    private boolean isChangePassword = true;
 	    private String languages;
 	
 	    

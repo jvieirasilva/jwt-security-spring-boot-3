@@ -1,16 +1,19 @@
 package com.security.controller;
 
+import java.time.Instant;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.security.dto.AuthenticationRequest;
 import com.security.dto.RegisterRequest;
 import com.security.dto.UserDTO;
+import com.security.reqeuest.AuthenticationRequest;
 import com.security.response.AuthenticationResponse;
 import com.security.service.AuthenticationService;
 
@@ -23,11 +26,12 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*") // Permite requisições de qualquer origem
+//@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @Tag(name = "Autenticação", description = "Endpoints para autenticação e registro de usuários")
 public class AuthenticationController {
-    @Autowired
-    AuthenticationService authenticationService;
+    
+    private final AuthenticationService authenticationService;
+    
 
     @PostMapping("/register")
     @Operation(
@@ -54,7 +58,8 @@ public class AuthenticationController {
 
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + response.getAccessToken())
-                .header("Refresh-Token Updated", response.getRefreshToken())
+                .header("Refresh-Token", response.getRefreshToken())
                 .body(response.getUser());
     }
+    
 }

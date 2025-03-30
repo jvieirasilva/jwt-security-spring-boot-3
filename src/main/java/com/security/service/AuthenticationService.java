@@ -1,44 +1,48 @@
 package com.security.service;
 
-import org.slf4j.Logger;
+import java.util.Date;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.security.dto.AuthenticationRequest;
 import com.security.dto.RegisterRequest;
 import com.security.dto.UserDTO;
 import com.security.model.Role;
 import com.security.model.User;
 import com.security.repository.UserRepository;
+import com.security.reqeuest.AuthenticationRequest;
 import com.security.response.AuthenticationResponse;
+
+ 
 
 @Service
 public class AuthenticationService {
 
-    @Autowired
-    private UserRepository repository;
-    
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    
-    @Autowired
-    private JwtService jwtService;
-    
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    
-    @Autowired
-    private EmailService emailService;
+	private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
+    
+    public AuthenticationService(UserRepository repository, 
+            PasswordEncoder passwordEncoder, 
+            JwtService jwtService, 
+            AuthenticationManager authenticationManager) {
+					this.repository = repository;
+					this.passwordEncoder = passwordEncoder;
+					this.jwtService = jwtService;
+					this.authenticationManager = authenticationManager;
+			}
+    
+    
 
     public AuthenticationResponse register(RegisterRequest request) {
-        var user = User.builder()
+      /*  var user = User.builder()
                 .fullName(request.getFullName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -48,10 +52,20 @@ public class AuthenticationService {
                 .isChangePassword(false)
                 .build();
 
-        repository.save(user);
+        repository.save(user);*/
+        
+        User user = User.builder()
+        	    .fullName(request.getFullName())
+        	    .email(request.getEmail())
+        	    .password(passwordEncoder.encode(request.getPassword()))
+        	    .role(Role.USER)
+        	    .joinDate(new Date())
+        	    .isActive(request.isActive())
+        	    .isNotLocked(request.isNotLocked())
+        	    .isChangePassword(request.isChangePassword())
+        	    .build();
+        repository.save(user); 
 
-        // Envia e-mail de boas-vindas com a senha
-        emailService.sendEmail(request.getEmail(), request.getPassword());
 
         // Geração dos tokens JWT
         var jwtToken = jwtService.generateToken(user);
@@ -117,8 +131,52 @@ public class AuthenticationService {
                     .user(userDTO)
                     .build();
         } catch (Exception e) {
+        	 e.printStackTrace();
             throw new RuntimeException("Falha na autenticação", e);
         }
+    }
+    
+    
+    public UserDTO createDefaultUserIfNotExists(String email, String rawPassword, String fullName) {
+        return repository.findByEmail(email)
+                .map(user -> {
+                    LOGGER.info("Usuário padrão já existe: {}", email);
+                    return toDTO(user);
+                })
+                .orElseGet(() -> {
+                    User user = User.builder()
+                            .fullName(fullName)
+                            .email(email)
+                            .password(passwordEncoder.encode(rawPassword))
+                            .role(Role.USER)
+                            .isActive(true)
+                            .isNotLocked(true)
+                            .isChangePassword(false)
+                            .joinDate(new Date())
+                            .lastLoginDate(new Date())
+                            .lastLoginDateDisplay(new Date())
+                            .build();
+
+                    repository.save(user);
+                    LOGGER.info("Usuário padrão criado com sucesso: {}", email);
+                    return toDTO(user);
+                });
+    }
+    
+    private UserDTO toDTO(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .profileImageUrl(user.getProfileImageUrl())
+                .lastLoginDate(user.getLastLoginDate())
+                .lastLoginDateDisplay(user.getLastLoginDateDisplay())
+                .joinDate(user.getJoinDate())
+                .role(user.getRole().name())
+                .isActive(user.isActive())
+                .isNotLocked(user.isNotLocked())
+                .isChangePassword(user.isChangePassword())
+                .build();
     }
 
 

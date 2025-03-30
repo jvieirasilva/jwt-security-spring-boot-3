@@ -1,8 +1,11 @@
 package com.security.model;
 import java.util.Collection;
+
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
@@ -19,7 +22,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "user")
-@Builder // Certifique-se de que essa anotação está presente
+@Builder 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -34,29 +37,52 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-
     
     private String profileImageUrl;
     private Date lastLoginDate;
     private Date lastLoginDateDisplay;
     private Date joinDate;
-    private boolean isActive;
-    private boolean isNotLocked;
-    private boolean isChangePassword;
+    private boolean isActive = true;
+    private boolean isNotLocked = true;
+    private boolean isChangePassword = true;
 	
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.email;
 	}
 
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name()));
+	}
+
+
+	@Override
+	public boolean isAccountNonExpired() {
+		//return false;
+		 return true;
+	}
+
+
+	@Override
+	public boolean isAccountNonLocked() {
+		 return this.isNotLocked;
+	}
+
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		//return false;
+		 return true;
+	}
+
+
+	@Override
+	public boolean isEnabled() {
+		//return false;
+		return this.isActive;
 	}
 
 		
