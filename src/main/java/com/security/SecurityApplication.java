@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.security.repository.UserRepository;
 
+/*
+ José Vieira da Silva Neto
+ */
 @SpringBootApplication
 public class SecurityApplication {
 
