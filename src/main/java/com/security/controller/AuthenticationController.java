@@ -40,7 +40,7 @@ public class AuthenticationController {
                 .body(response.getUser());
     }
 
-
+   
     @PostMapping("/authenticate")
     @Operation(
         summary = "Autenticar usuário",
