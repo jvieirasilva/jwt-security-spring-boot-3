@@ -1,13 +1,8 @@
 package com.security.controller;
 
-import java.time.Instant;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,8 +13,6 @@ import com.security.response.AuthenticationResponse;
 import com.security.service.AuthenticationService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -58,7 +51,7 @@ public class AuthenticationController {
 
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + response.getAccessToken())
-                .header("Refresh-Token", response.getRefreshToken())
+                .header("Refresh-Token2", response.getRefreshToken())
                 .body(response.getUser());
     }
     

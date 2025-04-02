@@ -10,6 +10,7 @@ import com.security.repository.UserRepository;
 
 /*
  José Vieira da Silva Neto 
+ Luis Henrique Vieira
  */
 @SpringBootApplication
 public class SecurityApplication {
