@@ -37,7 +37,7 @@ public class AuthenticationController {
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + response.getAccessToken())
                 .header("Refresh-Token", response.getRefreshToken())
-                .body(response.getUser());
+                .body(response.getUser()); 
     }
 
    
