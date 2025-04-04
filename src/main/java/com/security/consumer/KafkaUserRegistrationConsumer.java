@@ -8,11 +8,11 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-@Component
-@RequiredArgsConstructor
+//@Component
+//@RequiredArgsConstructor
 public class KafkaUserRegistrationConsumer {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+ /*   private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @KafkaListener(topics = "user-registration", groupId = "user-registration-consumer")
@@ -32,4 +32,5 @@ public class KafkaUserRegistrationConsumer {
             System.err.println("❌ Erro ao processar mensagem Kafka: " + e.getMessage());
         }
     }
+    */
 }
