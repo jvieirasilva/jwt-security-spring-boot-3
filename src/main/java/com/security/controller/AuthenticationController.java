@@ -1,6 +1,7 @@
 package com.security.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationController {
     
     private final AuthenticationService authenticationService;
+    private final KafkaTemplate<String, RegisterRequest> kafkaTemplate;
     
 
     @PostMapping("/register")
@@ -39,6 +41,17 @@ public class AuthenticationController {
                 .header("Refresh-Token", response.getRefreshToken())
                 .body(response.getUser()); 
     }
+    
+    @PostMapping("/registerKafka")
+    @Operation(
+        summary = "Registrar novo usuário via Kafka",
+        description = "Envia os dados do usuário para um tópico Kafka para ser processado"
+    )
+    public ResponseEntity<String> registerKafka(@RequestBody RegisterRequest request) {
+        kafkaTemplate.send("user-register-topic", request); 
+        return ResponseEntity.accepted().body("Usuário enviado para o tópico Kafka com sucesso");
+    }
+
 
    
     @PostMapping("/authenticate")
