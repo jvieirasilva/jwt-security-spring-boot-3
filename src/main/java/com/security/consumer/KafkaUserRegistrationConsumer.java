@@ -21,7 +21,7 @@ public class KafkaUserRegistrationConsumer {
             RegisterRequest request = objectMapper.readValue(message, RegisterRequest.class);
 
             restTemplate.postForEntity(
-                    "http://localhost:8085/api/auth/register",
+                    "http://localhost:8083/api/auth/register",
                     request,
                     String.class
             );
