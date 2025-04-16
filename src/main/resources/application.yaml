@@ -8,7 +8,7 @@ spring:
     name: security
 
   datasource:
-    url: jdbc:mysql://16.171.174.22:3306/training?useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/training?useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: admin
     driver-class-name: com.mysql.cj.jdbc.Driver
