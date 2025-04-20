@@ -49,7 +49,7 @@ public class SecurityConfig {
 	        .authorizeHttpRequests(request -> request
 	            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 	            .requestMatchers("/api/auth/**").permitAll()
-	            .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**").permitAll()
+	            .requestMatchers("/","/actuator/**","/swagger-ui/**", "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**").permitAll()
 	            .anyRequest().authenticated()
 	        )
 	        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
